@@ -1,0 +1,20 @@
+# This is a simple pipeline to deploy to Heroku
+# Do not use this .drone.yml file for production
+#
+# To copy this pipeline to your own project:
+#   - enable the pipeline within Drone
+#   - generate a Heroku API key with `heroku authorizations:create`
+#   - create a HEROKU_PASSWORD secret with that API key
+pipeline:
+  heroku:
+    image: alpine/git
+    env:
+      - HEROKU_APP=whatever
+    commands:
+      - git config credential.helper "/bin/sh .secrets"
+      - git remote add heroku https://git.heroku.com/$HEROKU_APP.git
+      - git push heroku
+    secrets:
+      - HEROKU_PASSWORD
+    when:
+      branch: master
